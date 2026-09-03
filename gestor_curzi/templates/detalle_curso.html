@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}{{ curso.titulo }} · Curzi Academy{% endblock %}
+
+{% block content %}
+    <a href="{% url 'lista_cursos' %}" class="back-link">&larr; Volver al catálogo</a>
+
+    <div class="card detail-hero">
+        <div class="detail-hero__top">
+            <div>
+                <span class="badge badge--{{ curso.nivel|lower }}">{{ curso.nivel }}</span>
+                <h1 class="page-title" style="margin-top: 12px;">{{ curso.titulo }}</h1>
+            </div>
+        </div>
+        <p class="desc">{{ curso.descripcion }}</p>
+    </div>
+
+    <div class="section-heading">
+        <h2>Lecciones del Curso</h2>
+        <a href="{% url 'crear_leccion' curso.pk %}" class="btn btn--primary btn--sm">+ Nueva Lección</a>
+    </div>
+
+    {% if lecciones %}
+        <div class="lesson-list">
+            {% for leccion in lecciones %}
+                <div class="card lesson-card">
+                    <div class="lesson-card__header">
+                        <h3 class="lesson-card__title">{{ leccion.titulo }}</h3>
+                        <div class="lesson-card__meta">
+                            <span class="badge badge--{{ leccion.estado|lower }}">{{ leccion.estado }}</span>
+                            <span>{{ leccion.duracion }} min</span>
+                        </div>
+                    </div>
+                    <p class="lesson-card__content">{{ leccion.contenido }}</p>
+                    <div class="lesson-card__actions">
+                        <a href="{% url 'editar_leccion' leccion.pk %}" class="btn btn--secondary btn--sm">Editar</a>
+                        <a href="{% url 'eliminar_leccion' leccion.pk %}" class="btn btn--danger btn--sm">Eliminar</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-state__icon">📝</div>
+            <h3>Este curso aún no tiene lecciones</h3>
+            <p>Agrega la primera lección para empezar a construir el temario.</p>
+            <br>
+            <a href="{% url 'crear_leccion' curso.pk %}" class="btn btn--primary">Agregar lección</a>
+        </div>
+    {% endif %}
+{% endblock %}

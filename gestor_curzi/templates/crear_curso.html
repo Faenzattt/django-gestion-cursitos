@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Nuevo Curso · Curzi Academy{% endblock %}
+
+{% block content %}
+    <a href="{% url 'lista_cursos' %}" class="back-link">&larr; Volver al catálogo</a>
+
+    <div class="page-header">
+        <div>
+            <span class="eyebrow">Nuevo registro</span>
+            <h1 class="page-title">Registrar Curso</h1>
+            <p class="page-subtitle">Completa los datos para publicar un nuevo curso en el catálogo.</p>
+        </div>
+    </div>
+
+    <div class="card form-card">
+        <form method="POST" id="form-curso">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_titulo">Título</label>
+                <input type="text" id="id_titulo" name="titulo" value="{{ titulo|default:'' }}" placeholder="Ej. Fundamentos de Historia del Arte">
+            </div>
+            <div class="form-group">
+                <label for="id_descripcion">Descripción</label>
+                <textarea id="id_descripcion" name="descripcion" placeholder="Breve resumen del curso">{{ descripcion|default:'' }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="id_nivel">Nivel</label>
+                <select id="id_nivel" name="nivel">
+                    <option value="Principiante">Principiante</option>
+                    <option value="Intermedio">Intermedio</option>
+                    <option value="Avanzado">Avanzado</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn--primary">Guardar Curso</button>
+                <a href="{% url 'lista_cursos' %}" class="btn btn--ghost">Cancelar</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    {% if error %}
+    <script>
+        AcademicSwal.fire({
+            icon: 'error',
+            title: 'Falta información',
+            text: "{{ error|escapejs }}",
+            confirmButtonText: 'Entendido'
+        });
+    </script>
+    {% endif %}
+{% endblock %}

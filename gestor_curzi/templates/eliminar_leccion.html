@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Eliminar Lección · {{ curso.titulo }}{% endblock %}
+
+{% block content %}
+    <a href="{% url 'detalle_curso' curso.pk %}" class="back-link">&larr; Volver a {{ curso.titulo }}</a>
+
+    <div class="card danger-card">
+        <div class="danger-card__icon">⚠️</div>
+        <h1 class="page-title">¿Eliminar esta lección?</h1>
+        <p class="page-subtitle" style="margin-top: 10px;">
+            <strong>{{ leccion.titulo }}</strong> se eliminará del curso <strong>{{ curso.titulo }}</strong>.
+            Esta acción no se puede deshacer.
+        </p>
+
+        <form method="POST" id="form-eliminar">
+            {% csrf_token %}
+            <div class="btn-row">
+                <button type="submit" class="btn btn--danger" id="btn-confirmar-eliminar">Confirmar Eliminación</button>
+                <a href="{% url 'detalle_curso' curso.pk %}" class="btn btn--secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    var form = document.getElementById('form-eliminar');
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        AcademicSwal.fire({
+            icon: 'warning',
+            title: '¿Eliminar lección?',
+            html: 'Vas a eliminar <strong>{{ leccion.titulo|escapejs }}</strong>.<br>Esta acción no se puede deshacer.',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+            customClass: {
+                popup: 'swal-academic',
+                title: 'swal-academic__title',
+                confirmButton: 'swal-academic__btn swal-academic__btn--danger',
+                cancelButton: 'swal-academic__btn swal-academic__btn--cancel'
+            }
+        }).then(function (result) {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
+</script>
+{% endblock %}

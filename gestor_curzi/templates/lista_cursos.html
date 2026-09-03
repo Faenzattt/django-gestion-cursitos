@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Catálogo · Curzi Academy{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <div>
+            <span class="eyebrow">Curzi Academy</span>
+            <h1 class="page-title">Catálogo de Cursos</h1>
+            <p class="page-subtitle">Explora el programa académico completo y administra cada curso y sus lecciones.</p>
+        </div>
+        <a href="{% url 'crear_curso' %}" class="btn btn--primary">+ Nuevo Curso</a>
+    </div>
+
+    {% if cursos %}
+        <div class="card-grid">
+            {% for curso in cursos %}
+                <a class="course-card" href="{% url 'detalle_curso' curso.pk %}">
+                    <span class="badge badge--{{ curso.nivel|lower }}">{{ curso.nivel }}</span>
+                    <h3 class="course-card__title">{{ curso.titulo }}</h3>
+                    <p class="course-card__desc">{{ curso.descripcion }}</p>
+                    <div class="course-card__meta">
+                        <span>{{ curso.lecciones.count }} lección{{ curso.lecciones.count|pluralize:"es" }}</span>
+                        <span class="course-card__arrow">→</span>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-state__icon">📚</div>
+            <h3>No hay cursos disponibles en este momento</h3>
+            <p>Crea el primer curso del catálogo para empezar a sumar lecciones.</p>
+            <br>
+            <a href="{% url 'crear_curso' %}" class="btn btn--primary">Crear nuevo curso</a>
+        </div>
+    {% endif %}
+{% endblock %}

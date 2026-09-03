@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Curzi Academy{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'gestor_curzi/css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="brand" href="{% url 'lista_cursos' %}">
+                <span class="brand-mark">🎓</span>
+                <span class="brand-text">Curzi <span class="brand-accent">Academy</span></span>
+            </a>
+            <nav class="site-nav">
+                <a class="nav-link" href="{% url 'lista_cursos' %}">Catálogo</a>
+                <a class="nav-cta" href="{% url 'crear_curso' %}">+ Nuevo Curso</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        var AcademicSwal = Swal.mixin({
+            customClass: {
+                popup: 'swal-academic',
+                title: 'swal-academic__title',
+                confirmButton: 'swal-academic__btn swal-academic__btn--primary',
+                cancelButton: 'swal-academic__btn swal-academic__btn--cancel'
+            },
+            buttonsStyling: false,
+            confirmButtonText: 'Continuar',
+            reverseButtons: true
+        });
+
+        (function () {
+            var messages = [
+                {% for message in messages %}
+                { tags: "{{ message.tags|default:'success'|escapejs }}", text: "{{ message.message|escapejs }}" }{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ];
+            var titleMap = { debug: 'Aviso', info: 'Aviso', success: '¡Listo!', warning: 'Atención', error: 'Ocurrió un problema' };
+            var iconMap = { debug: 'info', info: 'info', success: 'success', warning: 'warning', error: 'error' };
+
+            messages.forEach(function (msg, i) {
+                setTimeout(function () {
+                    AcademicSwal.fire({
+                        icon: iconMap[msg.tags] || 'success',
+                        title: titleMap[msg.tags] || '¡Listo!',
+                        text: msg.text,
+                        timer: 4200,
+                        timerProgressBar: true
+                    });
+                }, i * 200);
+            });
+        })();
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
